@@ -1,110 +1,241 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Product App</title>
+    <title>Book System App</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <style type="text/css">
+        #addbook{
+            width:400px;
+        }
+
+        .form-control{
+            width:300px;
+        }
+
+        #bookTable {
+            width: 500px;
+        }
+    </style>
 
 </head>
 <body>
+    <h1 class="display-1">Book System App</h1>
 
-    <h2>添加书籍</h2>
-    <div>
-        <p>    <input type="hidden" id="iid" /></p>
-        <p>书名:<input type="text" id="name" /></p>
-        <p>类别:<input type="text" id="type" /></p>
-        <p>评分：<input type="text" id="rate" /></p>
-        <p>价格：<input type="text" id="price" /></p>
-        <p>
-            <input type="button" id="btnAdd" value="添加" />
-        </p>
+    <h2 class="font-weight-normal">Add books</h2>
+
+    <div style="padding: 10px 10px 10px;" id="addbook">
+        <form class="bs-example bs-example-form" role="form">
+            <div class="input-group">
+                <span class="input-group-addon">book name:</span>
+                <input type="text" class="form-control" id="name">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">book type:</span>
+                <input type="text" class="form-control" id="type">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">rate:</span>
+                <input type="text" class="form-control" id="rate">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">price:</span>
+                <input type="text" class="form-control" id="price">
+            </div>
+            <br>
+            <div class="input-group">
+                <input class="btn btn-primary" type="button" id="btnAdd" value="add" />
+            </div>
+        </form>
     </div>
 
     <div>
-        <h2>Search by ID</h2>
-        <input type="text" id="bookName" size="5" />
-        <input type="button" value="Search" onclick="find();" />
-        <p id="product" />
+        <h2 class="font-weight-normal">Search by Book Name</h2>
+        <input type="text" class="form-control" id="bookName" size="5" width="300" />
+        <input type="button" class="btn btn-primary" value="Search" id="btnFind" />
+        <p id="book" />
+    </div>
+
+    <div>
+        <h2 class="font-weight-normal">Delete by Book Name</h2>
+        <input type="text" class="form-control" id="bookName2" size="5" width="300" />
+        <input type="button" class="btn btn-primary" value="Delete" id="btnDelete" />
     </div>
 
 
     <div>
-        <h2>All Books</h2>
-        <ul id="products" />
+        <h2 class="font-weight-normal">All Books</h2>
+        <ul id="books" />
     </div>
 
+
+    <div>
+        <table border="1" id="bookTable" class="table table-hover">
+
+            <caption>book detail</caption>
+
+            <thead>
+            </thead>
+
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 
     <script src="jquery-3.5.1.min.js"></script>
     <script>
-        var uri = 'api/products';
+        $(document).ready(getAll());
 
-        $(document).ready(getList());
-
-        function getList() {
-            $('#products').html('');
-
-            $.getJSON(uri)
-                .done(function (data) {
-                    // On success, 'data' contains a list of products.
-                    $.each(data, function (key, item) {
-                        // Add a list item for the product.
-                        $('<li>', { text: formatItem(item) }).appendTo($('#products'));
-                    });
-                });
-        }
 
         function getAll() {
-            $('#products').html('');
+            $('#books').html('');
+            $("#bookTable").children("thead").html("");
+            $("#bookTable").children("tbody").html("");
 
-             $.ajax({
-                 url: "api/products",
+
+            var row = document.createElement('tr');
+
+            var nameCell = document.createElement('th');
+            nameCell.innerHTML = "Book Name";
+            row.appendChild(nameCell);
+
+            var typeCell = document.createElement('th');
+            typeCell.innerHTML = "Type";
+            row.appendChild(typeCell);
+
+            var rateCell = document.createElement('th');
+            rateCell.innerHTML = "Rate";
+            row.appendChild(rateCell);
+
+            var priceCell = document.createElement('th');
+            priceCell.innerHTML = "Price";
+            row.appendChild(priceCell);
+
+            var editCell = document.createElement('th');
+            editCell.innerHTML = "Edit"
+            row.appendChild(editCell);
+
+
+            var delCell = document.createElement('th');
+            delCell.innerHTML = "Delete"
+            row.appendChild(delCell);
+
+
+            $("#bookTable").children("thead").append(row);
+
+            $.ajax({
+                url: "api/Books",
                 type: 'GET',
-                success: function(data) {
-                    console.log(data);
+                success: function (data) {
                     $.each(data, function (key, item) {
                         // Add a list item for the product.
-                        $('<li>', { text: formatItem(item) }).appendTo($('#products'));
+                        $('<li>', { text: formatItem(item) }).appendTo($('#books'));
+
+                        var row = document.createElement('tr');
+
+                        var nameCell = document.createElement('th');
+                        nameCell.innerHTML = item.Name;
+                        nameCell.setAttribute("class", "bookname");
+                        row.appendChild(nameCell);
+
+                        var typeCell = document.createElement('th');
+                        typeCell.innerHTML = item.Category;
+                        row.appendChild(typeCell);
+
+                        var rateCell = document.createElement('th');
+                        rateCell.innerHTML = item.Rate;
+                        row.appendChild(rateCell);
+
+                        var priceCell = document.createElement('th');
+                        priceCell.innerHTML = "$" + item.Price;
+                        row.appendChild(priceCell);
+
+                        var editCell = document.createElement('th');
+                        row.appendChild(editCell);
+                        var btnEdit = document.createElement('input');
+                        btnEdit.setAttribute('type', 'button');
+                        btnEdit.setAttribute('value', 'edit');
+                        btnEdit.setAttribute('class', 'btn btn-primary');
+                        btnEdit.setAttribute('id', 'btnEdit');
+                        editCell.appendChild(btnEdit);
+
+                        var delCell = document.createElement('th');
+                        row.appendChild(delCell);
+                        var btnDel = document.createElement('input');
+                        btnDel.setAttribute('type', 'button');
+                        btnDel.setAttribute('value', 'delete');
+                        btnDel.setAttribute('class', 'btn btn-primary');
+                        btnDel.setAttribute('id', 'btnDel');
+                        delCell.appendChild(btnDel);
+
+                        $("#bookTable").children("tbody").append(row);
                     });
                 }
-             });
-            
+            });
+
         }
 
 
         function formatItem(item) {
-            return "book name:["+item.Name +"] book type:["+ item.Category+ "] book rate:["+ item.Rate + '] price: $' + item.Price;
+            return "book name:[" + item.Name + "] book type:[" + item.Category + "] book rate:[" + item.Rate + '] price: $' + item.Price;
         }
 
-        function find() {
+        $("#btnFind").click(function () {
             var id = $('#bookName').val();
-            $.getJSON(uri + '/' + id)
-                .done(function (data) {
-                    $('#product').text(formatItem(data));
-                })
-                .fail(function (jqXHR, textStatus, err) {
-                    $('#product').text('Error: ' + err);
-                });
-        }
-        
+            console.log(id);
+            $.ajax({
+                url: "api/Books/" + id,
+                type: 'GET',
+                success: function (data) {
+                    //$("#book").text(formatItem(data));
+                    $("#book").text(formatItem(data));
+                },
+                error: function (e) {
+                    $("#book").text("book not found!");
+                }
+            });
+        });
+
 
         $("#btnAdd").click(function () {
-            var _data = { "Name": $("#name").val(), "Type": $("#type").val(), "Rate": $("#rate").val(), "Price": $("#price").val() };
+            var _data = { "Name": $("#name").val(), "Category": $("#type").val(), "Rate": $("#rate").val(), "Price": $("#price").val() };
+            var name = $("#name").val();
             $.ajax({
-                url: "api/Products/",
+                url: "api/Books/",
                 type: "POST",
                 data: _data,
-                //dataType: "json",
                 success: function (data) {
-                    alert("添加书籍[" + name + "]成功");
-                    console.log(_data);
-                    console.log(data);
-                    //getList();
+                    alert("add book [" + name + "] successfully");
                     getAll();
                 },
                 error: function (e) {
-                    alert("添加书籍[" + name + "]失败");
+                    alert("add book [" + name + "] fail");
                     alert(e.responseText);
                 }
             });
-        })
+        });
+
+        $("#btnDelete").click(function () {
+            var name = $("#bookName2").val();
+
+            $.ajax({
+                url: "api/Books/" + name,
+                type: 'DELETE',
+                success: function (data) {
+                    alert("delete book [" + name + "] successfully");
+                    getAll();
+                }
+            });
+        });
+
+        $("#btnEdit").click(function () {
+            var name = $(this).parent().children(".bookname").val();
+            alert(name);
+
+        });
 
     </script>
 </body>
