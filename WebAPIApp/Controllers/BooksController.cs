@@ -53,7 +53,7 @@ namespace WebAPIApp.Controllers
 
 
         [HttpPut]
-         public bool PutOne(Book model)
+         public bool PutOne([FromBody]Book model)
          {
              Book editModel = books.Find(p => p.Name == model.Name);
              if (editModel == null)

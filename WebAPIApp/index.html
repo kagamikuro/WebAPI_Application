@@ -9,6 +9,10 @@
             width:400px;
         }
 
+        #editBook {
+            width: 400px;
+        }
+
         .form-control{
             width:300px;
         }
@@ -65,6 +69,36 @@
         <input type="button" class="btn btn-primary" value="Delete" id="btnDelete" />
     </div>
 
+
+    <h2 class="font-weight-normal">Edit books</h2>
+
+    <div style="padding: 10px 10px 10px;" id="editBook">
+        <form class="bs-example bs-example-form" role="form">
+            <div class="input-group">
+                <span class="input-group-addon">book name:</span>
+                <input type="text" class="form-control" id="name2">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">book type:</span>
+                <input type="text" class="form-control" id="type2">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">rate:</span>
+                <input type="text" class="form-control" id="rate2">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">price:</span>
+                <input type="text" class="form-control" id="price2">
+            </div>
+            <br>
+            <div class="input-group">
+                <input class="btn btn-primary" type="button" id="edit" value="edit" />
+            </div>
+        </form>
+    </div>
 
     <div>
         <h2 class="font-weight-normal">All Books</h2>
@@ -231,10 +265,22 @@
             });
         });
 
-        $("#btnEdit").click(function () {
-            var name = $(this).parent().children(".bookname").val();
-            alert(name);
-
+        $("#edit").click(function () {
+            var _data = { "Name": $("#name2").val(), "Category": $("#type2").val(), "Rate": $("#rate2").val(), "Price": $("#price2").val() };
+            var name = $("#name2").val();
+            $.ajax({
+                url: "api/Books/",
+                type: "PUT",
+                data: _data,
+                success: function (data) {
+                    alert("edit book [" + name + "] successfully");
+                    getAll();
+                },
+                error: function (e) {
+                    alert("no this book!");
+                    alert(e.responseText);
+                }
+            });
         });
 
     </script>
