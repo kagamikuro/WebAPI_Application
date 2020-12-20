@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Book System App</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap.min.css" rel="stylesheet">
 
     <style type="text/css">
         #addbook{
@@ -21,6 +21,12 @@
             width: 500px;
         }
     </style>
+
+    <script type="text/javascript">
+        function openEditWin() {
+            window.open("edit.html", "newwindow", "height=300, width=400, toolbar=no,menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        }
+    </script>
 
 </head>
 <body>
@@ -194,6 +200,7 @@
                         btnEdit.setAttribute('value', 'edit');
                         btnEdit.setAttribute('class', 'btn btn-primary');
                         btnEdit.setAttribute('id', 'btnEdit');
+                        btnEdit.setAttribute('onclick', 'openEditWin()');
                         editCell.appendChild(btnEdit);
 
                         var delCell = document.createElement('th');
@@ -201,8 +208,8 @@
                         var btnDel = document.createElement('input');
                         btnDel.setAttribute('type', 'button');
                         btnDel.setAttribute('value', 'delete');
-                        btnDel.setAttribute('class', 'btn btn-primary');
-                        btnDel.setAttribute('id', 'btnDel');
+                        btnDel.setAttribute('class', 'btn btn-primary btnDel');
+
                         delCell.appendChild(btnDel);
 
                         $("#bookTable").children("tbody").append(row);
@@ -264,6 +271,21 @@
                 }
             });
         });
+
+        $(".btnDel").click(function () {
+            console.log("btnDel click function called");
+            var name = $(this).parent().children(".bookname");
+
+            $.ajax({
+                url: "api/Books/" + name,
+                type: 'DELETE',
+                success: function (data) {
+                    alert("delete book [" + name + "] successfully");
+                    getAll();
+                }
+            });
+        });
+
 
         $("#edit").click(function () {
             var _data = { "Name": $("#name2").val(), "Category": $("#type2").val(), "Rate": $("#rate2").val(), "Price": $("#price2").val() };
