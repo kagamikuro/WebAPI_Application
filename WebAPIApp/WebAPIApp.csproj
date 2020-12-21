@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bootstrap.min.css" />
+    <Content Include="create.html" />
     <Content Include="edit.html" />
     <Content Include="Global.asax" />
     <Content Include="index.html" />

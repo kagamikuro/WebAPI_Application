@@ -16,7 +16,7 @@ namespace WebAPIApp.Controllers
             new Book { Name = "American Dirt", Category = "Fiction",Rate = 4, Price = 125},
             new Book { Name = "The Major of Casterbridge", Category = "Fiction",Rate = 5, Price = 200 },
             new Book { Name = "Douglass", Category = "Fiction",Rate = 3, Price = 150 },
-            new Book { Name = "J.D.ROBB", Category = "Crime",Rate = 5, Price = 230 }
+            new Book { Name = "J D ROBB", Category = "Crime",Rate = 5, Price = 230 }
         };
 
 
@@ -35,7 +35,6 @@ namespace WebAPIApp.Controllers
                 return NotFound();
             }
             return Ok(product);
-            //return NotFound();
         }
 
         [HttpPost]
