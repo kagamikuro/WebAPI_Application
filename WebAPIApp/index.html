@@ -137,6 +137,10 @@
 
             var row = document.createElement('tr');
 
+            var idCell = document.createElement('th');
+            idCell.innerHTML = "ID";
+            row.appendChild(idCell);
+
             var nameCell = document.createElement('th');
             nameCell.innerHTML = "Book Name";
             row.appendChild(nameCell);
@@ -170,10 +174,16 @@
                 type: 'GET',
                 success: function (data) {
                     $.each(data, function (key, item) {
+
                         // Add a list item for the product.
                         $('<li>', { text: formatItem(item) }).appendTo($('#books'));
 
                         var row = document.createElement('tr');
+
+                        var idCell = document.createElement('th');
+                        idCell.innerHTML = item.Id;
+                        idCell.setAttribute("class", "bookId");
+                        row.appendChild(idCell);
 
                         var nameCell = document.createElement('th');
                         nameCell.innerHTML = item.Name;
@@ -201,10 +211,10 @@
                         btnEdit.setAttribute('id', 'btnEdit');
                         //btnEdit.setAttribute('onclick', 'openEditWin()');
                         btnEdit.onclick = function () {
-                            var bookName = $(this).parent().parent().children(".bookname").html();
-                            console.log("edit function called with bookName:" + bookName);
+                            var bookId = $(this).parent().parent().children(".bookId").html();
+                            console.log("edit function called with bookName:" + bookId);
 
-                            window.open("edit.html?bookName="+bookName, "newwindow", "height=410, width=400, toolbar=no,menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+                            window.open("edit.html?bookId="+bookId, "newwindow", "height=410, width=400, toolbar=no,menubar=no, scrollbars=no, resizable=no, location=no, status=no");
                         };
                         editCell.appendChild(btnEdit);
 
@@ -216,12 +226,13 @@
                         btnDel.setAttribute('class', 'btn btn-primary');
                         btnDel.setAttribute('id', 'btnDel');
                         btnDel.onclick = function () {
+                            var id = $(this).parent().parent().children(".bookId").html();
                             var name = $(this).parent().parent().children(".bookname").html();
-                            console.log("children:" + $(this).parent().parent().children(".bookname").html());
+                            console.log("children:" + $(this).parent().parent().children(".bookId").html());
 
 
                             $.ajax({
-                                url: "api/Books/" + name,
+                                url: "api/Books/" + id,
                                 type: 'DELETE',
                                 success: function (data) {
                                     alert("delete book [" + name + "] successfully");
@@ -327,7 +338,7 @@
                 }
             });
         });
-
+        /*
         $("#btnDelete").click(function () {
             var name = $("#bookName2").val();
             
@@ -340,7 +351,7 @@
                 }
             });
         });
-
+        */
         $("#edit").click(function () {
             var _data = { "Name": $("#name2").val(), "Category": $("#type2").val(), "Rate": $("#rate2").val(), "Price": $("#price2").val() };
             var name = $("#name2").val();

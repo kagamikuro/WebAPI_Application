@@ -208,3 +208,7 @@ C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\obj\Debug\WebAPIApp.
 C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\obj\Debug\WebAPIApp.csproj.CopyComplete
 C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\obj\Debug\WebAPIApp.dll
 C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\obj\Debug\WebAPIApp.pdb
+C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\bin\EntityFramework.dll
+C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\bin\EntityFramework.SqlServer.dll
+C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\bin\EntityFramework.xml
+C:\Users\Administrator\Desktop\WebAPI_Application\WebAPIApp\bin\EntityFramework.SqlServer.xml

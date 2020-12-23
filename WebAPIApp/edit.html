@@ -13,8 +13,9 @@
 
         function edit() {
             console.log("edit function called")
-            var _data = { "Name": $("#name").val(), "Category": $("#type").val(), "Rate": $("#rate").val(), "Price": $("#price").val() };
+            var _data = {"Id": $("#id").val(), "Name": $("#name").val(), "Category": $("#type").val(), "Rate": $("#rate").val(), "Price": $("#price").val() };
             var name = $("#name").val();
+
             $.ajax({
                 url: "api/Books/",
                 type: "PUT",
@@ -37,6 +38,12 @@
 
     <div style="padding: 10px 10px 10px;" id="editBook">
         <form class="bs-example bs-example-form" role="form">
+
+            <div class="input-group">
+                <span class="input-group-addon">ID:</span>
+                <input type="text" class="form-control" id="id">
+            </div>
+            <br>
             <div class="input-group">
                 <span class="input-group-addon">book name:</span>
                 <input type="text" class="form-control" id="name">
@@ -64,10 +71,10 @@
     </div>
 
     <script type="text/javascript">
-        var bookName = decodeURI(window.location.href).split('=')[1];
+        var bookId = decodeURI(window.location.href).split('=')[1];
         //alert(bookName);
-        $("#name").val(bookName);
-        $("#name").attr("disabled", "disabled");
+        $("#id").val(bookId);
+        $("#id").attr("disabled", "disabled");
 
     </script>
 
