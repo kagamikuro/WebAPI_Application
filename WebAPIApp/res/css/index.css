@@ -1,0 +1,15 @@
+#addbook{
+            width: 400px;
+        }
+
+#editBook{
+            width: 400px;
+        }
+
+.form-control {
+            width: 300px;
+        }
+
+#bookTable {
+            width: 100%;
+        }

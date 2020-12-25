@@ -5,7 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using WebAPIApp.Models;
-//using System.Data.SQLite;
+using System.Configuration;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Data;
+using System.Data.SqlClient;
+using System.Web.UI.WebControls;
 
 namespace WebAPIApp.Controllers
 {
@@ -13,39 +19,69 @@ namespace WebAPIApp.Controllers
     {
 
 
-
-        static List<Book> books = new List<Book>()
-        {
-            new Book {Id = 1, Name = "American Dirt", Category = "Fiction",Rate = 4, Price = 125},
-            new Book {Id = 2, Name = "The Major of Casterbridge", Category = "Fiction",Rate = 5, Price = 200 },
-            new Book {Id = 3, Name = "Douglass", Category = "Fiction",Rate = 3, Price = 150 },
-            new Book {Id = 4, Name = "J D ROBB", Category = "Crime",Rate = 5, Price = 230 }
-        };
-
+        SqlConnection connection = new SqlConnection(@"Data Source=(localdb)\ProjectsV13;Initial Catalog=mydb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        static List<Book> books = new List<Book>();
+        SqlCommand command = new SqlCommand();
 
         [HttpGet]
-        public IEnumerable<Book> GetAllProducts()
+        public IEnumerable<Book> GetAllBooks()
         {
+            books.Clear();
+            
+            command.Connection = connection;
+            command.CommandText = "select * from book";
+
+
+            connection.Open();
+            SqlDataAdapter adp = new SqlDataAdapter(command);
+            DataSet ds = new DataSet();
+            adp.Fill(ds);
+
+            foreach (DataRow datarow in ds.Tables[0].Rows)
+            {
+
+                var Id = datarow[0];
+                var Name = datarow[1];
+                var Type = datarow[2];
+                var Rate = datarow[3];
+                var Price = datarow[4];
+
+                Book book = new Book((int)Id, (string)Name, (string)Type, (int)Rate, (decimal)Price);
+
+                Console.WriteLine(book);
+                books.Add(book);
+
+            }
+            connection.Close();
+             
             return books;
         }
 
         [HttpGet]
-        public IHttpActionResult GetProduct([FromUri]int id)
+        public IHttpActionResult GetBook([FromUri]int id)
         {
-            var product = books.FirstOrDefault((p) => p.Id.Equals(id));
-            if (product == null)
+            var book = books.FirstOrDefault((p) => p.Id.Equals(id));
+            if (book == null)
             {
                 return NotFound();
             }
-            return Ok(product);
+            return Ok(book);
         }
 
         [HttpPost]
-        public bool Post([FromBody]Book obj)
+        public bool Post([FromBody] int Id, string Name, String Type, int Rate, decimal Price)
+            
         {
-            int currentMaxId = books.OrderByDescending(t => t.Id).First().Id;
-            obj.Id = currentMaxId + 1;
-            books.Add(obj);
+            //int currentMaxId = books.OrderByDescending(t => t.Id).First().Id;
+            //obj.Id = currentMaxId + 1;
+            string sql = "insert into book(Id, Name, Type, Rate, Price) values('" + Id + "','" + Name + "','" + Type + "','" + Rate + "','" + Price + "' )";
+            command.Connection = connection;
+            command.CommandText = sql;
+
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+
             return true;
         }
 
@@ -65,9 +101,12 @@ namespace WebAPIApp.Controllers
                 return NotFound();
             }
             editModel.Name = model.Name;
-            editModel.Category = model.Category;
+            editModel.Type = model.Type;
             editModel.Rate = model.Rate;
             editModel.Price = model.Price;
+
+            
+
             return Ok(editModel);
          }
 
