@@ -109,21 +109,19 @@ namespace WebAPIApp.Controllers
 
 
         [HttpPut]
-         public IHttpActionResult PutOne([FromBody]Book model)
+         public IHttpActionResult PutOne([FromBody]Book book)
          {
-            Book editModel = books.Find(p => p.Id == model.Id);
-            if (editModel == null)
-            {
-                return NotFound();
-            }
-            editModel.Name = model.Name;
-            editModel.Type = model.Type;
-            editModel.Rate = model.Rate;
-            editModel.Price = model.Price;
+            string sql = "update book set Name = '"+book.Name+"', Type='"+book.Type+ "', Rate=" + book.Rate + ", Price=" + book.Price + "  where Id = " + book.Id;
 
-            
+            command.Connection = connection;
+            command.CommandText = sql;
 
-            return Ok(editModel);
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+
+
+            return Ok(true);
          }
 
 }
