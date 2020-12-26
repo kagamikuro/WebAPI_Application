@@ -19,7 +19,7 @@ namespace WebAPIApp.Controllers
     {
 
 
-        SqlConnection connection = new SqlConnection(@"Data Source=(localdb)\ProjectsV13;Initial Catalog=mydb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\tianbai\Desktop\WebAPI_Application\WebAPIApp\mydb.mdf;Integrated Security=True;Connect Timeout=30");
         static List<Book> books = new List<Book>();
         SqlCommand command = new SqlCommand();
 
@@ -36,23 +36,22 @@ namespace WebAPIApp.Controllers
             SqlDataAdapter adp = new SqlDataAdapter(command);
             DataSet ds = new DataSet();
             adp.Fill(ds);
+            connection.Close();
 
             foreach (DataRow datarow in ds.Tables[0].Rows)
             {
 
-                var Id = datarow[0];
-                var Name = datarow[1];
-                var Type = datarow[2];
-                var Rate = datarow[3];
-                var Price = datarow[4];
+                Book book = new Book();
+                book.Id = (int)datarow[0];
+                book.Name = (string)datarow[1];
+                book.Type = (string)datarow[2];
+                book.Rate = (int)datarow[3];
+                book.Price = (decimal)datarow[4];
 
-                Book book = new Book((int)Id, (string)Name, (string)Type, (int)Rate, (decimal)Price);
-
-                Console.WriteLine(book);
                 books.Add(book);
 
             }
-            connection.Close();
+            
              
             return books;
         }
@@ -69,14 +68,23 @@ namespace WebAPIApp.Controllers
         }
 
         [HttpPost]
-        public bool Post([FromBody] int Id, string Name, String Type, int Rate, decimal Price)
-            
+        public bool Post(Book book)          
         {
-            //int currentMaxId = books.OrderByDescending(t => t.Id).First().Id;
-            //obj.Id = currentMaxId + 1;
-            string sql = "insert into book(Id, Name, Type, Rate, Price) values('" + Id + "','" + Name + "','" + Type + "','" + Rate + "','" + Price + "' )";
+
+            string sql = "select MAX(Id) from book";
             command.Connection = connection;
             command.CommandText = sql;
+
+            connection.Open();
+            int currentMaxId = (int)command.ExecuteScalar();
+            connection.Close();
+
+
+            book.Id = currentMaxId+1;
+            sql = "insert into book(Id, Name, Type, Rate, Price) values('" + book.Id + "','" + book.Name + "','" + book.Type + "','" + book.Rate + "','" + book.Price + "' )";
+            command.Connection = connection;
+            command.CommandText = sql;
+
 
             connection.Open();
             command.ExecuteNonQuery();
@@ -88,7 +96,15 @@ namespace WebAPIApp.Controllers
         [HttpDelete]
         public bool Delete(int id)
         {
-            return books.Remove(books.Find(p => p.Id == id));
+            string sql = "delete from book where Id = "+id;
+            command.Connection = connection;
+            command.CommandText = sql;
+
+            connection.Open();
+            command.ExecuteNonQuery();
+            connection.Close();
+
+            return true;
         }
 
 

@@ -14,14 +14,5 @@ namespace WebAPIApp.Models
         public int Rate { get; set; }
         public decimal Price { get; set; }
 
-        public Book(int Id,string Name, String Type, int Rate, decimal price)
-        {
-            this.Id = Id;
-            this.Name = Name;
-            this.Type = Type;
-            this.Rate = Rate;
-            this.Price = price;
-        }
-
     }
 }

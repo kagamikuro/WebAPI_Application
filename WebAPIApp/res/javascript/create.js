@@ -18,11 +18,12 @@ function load_add_select(){
 
 
 function create() {
-    var _data = { "Name": $("#add_name").val(), "Type": $("#add_type").val(), "Rate": $("#add_rate").val(), "Price": $("#add_price").val() };
+    var _data = { Name: $("#add_name").val(), Type: $("#add_type").val(), Rate: $("#add_rate").val(), Price: $("#add_price").val() };
     var name = $("#add_name").val();
     console.log(_data);
+
     $.ajax({
-        url: "api/Books/",
+        url: "api/Books/Post",
         type: "POST",
         data: _data,
         success: function (data) {
