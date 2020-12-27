@@ -12,31 +12,20 @@ using System.IO;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI.WebControls;
+using WebAPIApp.Dao;
 
 namespace WebAPIApp.Controllers
 {
     public class BooksController : ApiController
     {
 
-
-        SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\tianbai\Desktop\WebAPI_Application\WebAPIApp\mydb.mdf;Integrated Security=True;Connect Timeout=30");
-        static List<Book> books = new List<Book>();
-        SqlCommand command = new SqlCommand();
+        BooksDao dao = new BooksDao();           
 
         [HttpGet]
         public IEnumerable<Book> GetAllBooks()
         {
-            books.Clear();
-            
-            command.Connection = connection;
-            command.CommandText = "select * from book";
-
-
-            connection.Open();
-            SqlDataAdapter adp = new SqlDataAdapter(command);
-            DataSet ds = new DataSet();
-            adp.Fill(ds);
-            connection.Close();
+            List<Book> books = new List<Book>();
+            DataSet ds = dao.queryAllBooks();
 
             foreach (DataRow datarow in ds.Tables[0].Rows)
             {
@@ -49,79 +38,44 @@ namespace WebAPIApp.Controllers
                 book.Price = (decimal)datarow[4];
 
                 books.Add(book);
-
-            }
-            
+            }     
              
             return books;
         }
 
         [HttpGet]
-        public IHttpActionResult GetBook([FromUri]int id)
+        public IHttpActionResult GetOneBook(int id)
         {
-            var book = books.FirstOrDefault((p) => p.Id.Equals(id));
-            if (book == null)
-            {
-                return NotFound();
-            }
+            DataSet ds = dao.queryOneBooks(id);
+
+
+            Book book = new Book();
+            book.Id = (int)ds.Tables[0].Rows[0][0];
+            book.Name = (string)ds.Tables[0].Rows[0][1];
+            book.Type = (string)ds.Tables[0].Rows[0][2];
+            book.Rate = (int)ds.Tables[0].Rows[0][3];
+            book.Price = (decimal)ds.Tables[0].Rows[0][4];        
+
             return Ok(book);
         }
 
         [HttpPost]
-        public bool Post(Book book)          
+        public IHttpActionResult Post(Book book)          
         {
-
-            string sql = "select MAX(Id) from book";
-            command.Connection = connection;
-            command.CommandText = sql;
-
-            connection.Open();
-            int currentMaxId = (int)command.ExecuteScalar();
-            connection.Close();
-
-
-            book.Id = currentMaxId+1;
-            sql = "insert into book(Id, Name, Type, Rate, Price) values('" + book.Id + "','" + book.Name + "','" + book.Type + "','" + book.Rate + "','" + book.Price + "' )";
-            command.Connection = connection;
-            command.CommandText = sql;
-
-
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-
-            return true;
+            return Ok(dao.createBook(book));
         }
 
         [HttpDelete]
-        public bool Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
-            string sql = "delete from book where Id = "+id;
-            command.Connection = connection;
-            command.CommandText = sql;
-
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-
-            return true;
+            return Ok(dao.deleteBook(id));
         }
 
 
         [HttpPut]
          public IHttpActionResult PutOne([FromBody]Book book)
          {
-            string sql = "update book set Name = '"+book.Name+"', Type='"+book.Type+ "', Rate=" + book.Rate + ", Price=" + book.Price + "  where Id = " + book.Id;
-
-            command.Connection = connection;
-            command.CommandText = sql;
-
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
-
-
-            return Ok(true);
+            return Ok(dao.updateBook(book));
          }
 
 }

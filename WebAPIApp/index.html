@@ -11,10 +11,12 @@
     <script src="res/javascript/index.js?v=1.4"></script>
     <script src="res/javascript/create.js?v=1.9"></script>
     <script src="res/javascript/edit.js?v=1.0"></script>
+    <script src="res/javascript/validate.js"></script>
 
 </head>
 <body>
     <!-- the pop windows-->
+    <!-- add book modal-->
     <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -25,19 +27,22 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="bookname">Book Name:</label>
-                        <input type="text" name="bookname" class="form-control" id="add_name" placeholder="book name">
+                        <input type="text" name="bookname" class="form-control" id="add_name" placeholder="book name" onblur="validate_bookname(this.value)">
+                        <div id="add_bookname"></div>
                     </div>
                     <div class="form-group">
                         <label for="booktype">Type:</label>
-                        <select id="add_type" name="booktype" class="form-control"> </select>
+                        <select id="add_type" name="booktype" class="form-control" > </select>           
                     </div>
                     <div class="form-group">
                         <label for="bookrate">Rate:</label>
-                        <input type="text" name="bookrate" class="form-control" id="add_rate" placeholder="rate">
+                        <input type="text" name="bookrate" class="form-control" id="add_rate" placeholder="rate" onblur="validate_bookrate(this.value)">
+                        <div id="add_bookrate"></div>
                     </div>
                     <div class="form-group">
                         <label for="bookprice">Price</label>
-                        <input type="text" name="bookprice" class="form-control" id="add_price" placeholder="price">
+                        <input type="text" name="bookprice" class="form-control" id="add_price" placeholder="price" onblur="validate_bookprice(this.value)">
+                        <div id="add_bookprice"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -47,7 +52,8 @@
             </div>
         </div>
     </div>
-
+    
+    <!-- edit book modal-->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -62,19 +68,22 @@
                     </div>
                     <div class="form-group">
                         <label for="bookname">Book Name:</label>
-                        <input type="text" name="bookname" class="form-control" id="edit_name" placeholder="book name">
+                        <input type="text" name="bookname" class="form-control" id="edit_name" placeholder="book name" onblur="validate_bookname_edit(this.value)">
+                        <div id="edit_bookname"></div>
                     </div>
                     <div class="form-group">
                         <label for="booktype" >Type:</label>
-                        <select id="edit_type" name="booktype" class="form-control"> </select>
+                        <select id="edit_type" name="booktype" class="form-control" > </select>
                     </div>
                     <div class="form-group">
                         <label for="bookrate">Rate:</label>
-                        <input type="text" name="bookrate" class="form-control" id="edit_rate" placeholder="rate">
+                        <input type="text" name="bookrate" class="form-control" id="edit_rate" placeholder="rate" onblur="validate_bookrate_edit(this.value)">
+                        <div id="edit_bookrate"></div>
                     </div>
                     <div class="form-group">
                         <label for="bookprice">Price</label>
-                        <input type="text" name="bookprice" class="form-control" id="edit_price" placeholder="price">
+                        <input type="text" name="bookprice" class="form-control" id="edit_price" placeholder="price" onblur="validate_bookprice_edit(this.value)">
+                        <div id="edit_bookprice"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
