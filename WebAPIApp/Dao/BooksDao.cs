@@ -1,98 +1,120 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using WebAPIApp.Models;
+﻿// <copyright file="BooksDao.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace WebAPIApp.Dao
 {
+    using System;
+    using System.Data;
+    using System.Data.SqlClient;
+    using WebAPIApp.Models;
 
+    /// <summary>
+    /// The books dao.
+    /// </summary>
     public class BooksDao
     {
-        SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\tianbai\Desktop\WebAPI_Application\WebAPIApp\mydb.mdf;Integrated Security=True;Connect Timeout=30");
-        SqlCommand command = new SqlCommand();
+        // sql connection String
+        private readonly SqlConnection connection = new SqlConnection(@"Data Source=(localdb)\ProjectsV13;Initial Catalog=mydb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        private readonly SqlCommand command = new SqlCommand();
 
-        public bool createBook(Book book)
+        /// <summary>
+        /// create a book.
+        /// </summary>
+        /// <param name="book"> book object. </param>
+        /// <returns>true.</returns>
+        public bool CreateBook(book book)
         {
             string sql = "select MAX(Id) from book";
-            command.Connection = connection;
-            command.CommandText = sql;
+            this.command.Connection = this.connection;
+            this.command.CommandText = sql;
 
-            connection.Open();
-            int currentMaxId = (int)command.ExecuteScalar();
-            connection.Close();
-
+            this.connection.Open();
+            int currentMaxId = (int)this.command.ExecuteScalar();
+            this.connection.Close();
 
             book.Id = currentMaxId + 1;
             sql = "insert into book(Id, Name, Type, Rate, Price) values('" + book.Id + "','" + book.Name + "','" + book.Type + "','" + book.Rate + "','" + book.Price + "' )";
-            command.Connection = connection;
-            command.CommandText = sql;
+            this.command.Connection = this.connection;
+            this.command.CommandText = sql;
 
-
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            this.connection.Open();
+            this.command.ExecuteNonQuery();
+            this.connection.Close();
 
             return true;
         }
 
-        public DataSet queryAllBooks()
+        /// <summary>
+        /// select all book.
+        /// </summary>
+        /// <returns>true.</returns>
+        public DataSet QueryAllBooks()
         {
+            string sql = "select * from book";
+            this.command.Connection = this.connection;
+            this.command.CommandText = sql;
 
-            String sql = "select * from book";
-            command.Connection = connection;
-            command.CommandText = sql;
-
-            connection.Open();
-            SqlDataAdapter adp = new SqlDataAdapter(command);
+            this.connection.Open();
+            SqlDataAdapter adp = new SqlDataAdapter(this.command);
             DataSet ds = new DataSet();
             adp.Fill(ds);
-            connection.Close();
+            this.connection.Close();
             return ds;
         }
 
-        public DataSet queryOneBooks(int id)
+        /// <summary>
+        /// query one book.
+        /// </summary>
+        /// <param name="id"> book id. </param>
+        /// <returns>the dataset.</returns>
+        public DataSet QueryOneBooks(int id)
         {
+            string sql = "select * from book where Id= " + id;
+            this.command.Connection = this.connection;
+            this.command.CommandText = sql;
 
-            String sql = "select * from book where Id= " + id;
-            command.Connection = connection;
-            command.CommandText = sql;
-
-            connection.Open();
-            SqlDataAdapter adp = new SqlDataAdapter(command);
+            this.connection.Open();
+            SqlDataAdapter adp = new SqlDataAdapter(this.command);
             DataSet ds = new DataSet();
             adp.Fill(ds);
-            connection.Close();
+            this.connection.Close();
             return ds;
         }
 
-        
-
-        public bool deleteBook(int id)
+        /// <summary>
+        /// delete one book.
+        /// </summary>
+        /// <param name="id"> book id. </param>
+        /// <returns>the dataset.</returns>
+        public bool DeleteBook(int id)
         {
             string sql = "delete from book where Id = " + id;
-            command.Connection = connection;
-            command.CommandText = sql;
+            this.command.Connection = this.connection;
+            this.command.CommandText = sql;
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            this.connection.Open();
+            this.command.ExecuteNonQuery();
+            this.connection.Close();
 
             return true;
         }
 
-        public bool updateBook(Book book)
+        /// <summary>
+        /// update one book.
+        /// </summary>
+        /// <param name="book"> book object. </param>
+        /// <returns>the dataset.</returns>
+        public bool UpdateBook(book book)
         {
             string sql = "update book set Name = '" + book.Name + "', Type='" + book.Type + "', Rate=" + book.Rate + ", Price=" + book.Price + "  where Id = " + book.Id;
 
-            command.Connection = connection;
-            command.CommandText = sql;
+            this.command.Connection = this.connection;
+            this.command.CommandText = sql;
 
-            connection.Open();
-            command.ExecuteNonQuery();
-            connection.Close();
+            this.connection.Open();
+            this.command.ExecuteNonQuery();
+            this.connection.Close();
 
             return true;
         }

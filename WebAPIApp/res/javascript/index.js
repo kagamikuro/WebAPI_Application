@@ -111,12 +111,16 @@ function getAll() {
                 actionCell.appendChild(btnEdit);
 
                 //actionCell.innerHTML += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                var space = document.createElement('label');
+                space.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;";
+                actionCell.appendChild(space);
 
                 var btnDel = document.createElement('input');
                 btnDel.setAttribute('type', 'button');
                 btnDel.setAttribute('value', 'X');
                 btnDel.setAttribute('class', 'btn btn-danger');
                 btnDel.setAttribute('id', 'btnDel');
+
                 btnDel.onclick = function () {
                     var id = $(this).parent().parent().children(".bookId").html();
                     var name = $(this).parent().parent().children(".bookname").html();
